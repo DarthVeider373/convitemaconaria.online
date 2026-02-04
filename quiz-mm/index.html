@@ -1,0 +1,803 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta name="x-poe-datastore-behavior" content="local_only"><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segredos da Maçonaria</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&amp;family=Cormorant+Garamond:wght@300;400;500&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #030508;
+            --bg-card: #060a10;
+            --bg-lighter: #0a1018;
+            --gold: #c9a227;
+            --gold-light: #d4af37;
+            --border-gold: rgba(201, 162, 39, 0.25);
+            --text-white: #ffffff;
+            --text-gray: #6a6a6a;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--text-white);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        /* Tela de Verificação de Idade */
+        .age-verification {
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 4px;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .dots {
+            color: var(--gold);
+            font-size: 1.5rem;
+            letter-spacing: 8px;
+            margin-bottom: 30px;
+        }
+
+        .logo-container {
+            margin-bottom: 30px;
+        }
+
+        .logo-svg {
+            width: 80px;
+            height: 80px;
+        }
+
+        .verification-label {
+            font-family: 'Cinzel', serif;
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .verification-question {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--text-white);
+            margin-bottom: 35px;
+        }
+
+        .btn-yes {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            border: none;
+            color: var(--bg-dark);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 12px;
+        }
+
+        .btn-yes:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+        }
+
+        .btn-no {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--text-gray);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-no:hover {
+            border-color: var(--gold);
+            color: var(--text-white);
+        }
+
+        .privacy-note {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 4px;
+            padding: 40px 30px;
+        }
+
+        .quiz-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-logo {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 15px;
+        }
+
+        .quiz-title {
+            font-family: 'Cinzel', serif;
+            font-size: 0.65rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .progress-section {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 3px;
+            background: rgba(201, 162, 39, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gold);
+            transition: width 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .progress-step {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        .question-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .question-symbol {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 10px rgba(201, 162, 39, 0.3));
+        }
+
+        .question-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: var(--text-white);
+            line-height: 1.5;
+        }
+
+        .options-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--text-white);
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.08);
+        }
+
+        .option-btn:active {
+            transform: scale(0.98);
+        }
+
+        .option-btn.selected {
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.15);
+            pointer-events: none;
+        }
+
+        .option-btn.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            font-size: 1rem;
+        }
+
+        .back-btn {
+            display: none;
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--border-gold);
+            color: var(--text-gray);
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn.visible {
+            display: block;
+        }
+
+        .back-btn:hover {
+            border-color: var(--gold);
+            color: var(--text-white);
+        }
+
+        /* Página Final */
+        .final-page {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 4px;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        .final-page.active {
+            display: block;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .final-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { filter: drop-shadow(0 0 5px rgba(201, 162, 39, 0.3)); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 20px rgba(201, 162, 39, 0.6)); transform: scale(1.05); }
+        }
+
+        .final-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--gold);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            margin: 20px auto;
+        }
+
+        .final-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 18px 40px;
+            background: var(--gold);
+            border: none;
+            color: var(--bg-dark);
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .cta-btn:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 30px rgba(201, 162, 39, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .trust-section {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+        }
+
+        .trust-item span {
+            font-size: 1rem;
+        }
+
+        /* Página de bloqueio */
+        .blocked-page {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-gold);
+            border-radius: 4px;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .blocked-page.active {
+            display: block;
+        }
+
+        .blocked-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        /* Transição entre perguntas */
+        .question-transition {
+            opacity: 0;
+            transform: translateX(30px);
+            transition: all 0.3s ease;
+        }
+
+        .question-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .age-verification,
+            .quiz-container,
+            .final-page {
+                padding: 35px 20px;
+            }
+
+            .verification-question {
+                font-size: 1.4rem;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+            }
+
+            .option-btn {
+                padding: 14px 15px;
+                font-size: 1rem;
+            }
+
+            .cta-btn {
+                padding: 16px 30px;
+                font-size: 0.75rem;
+            }
+
+            .trust-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Verificação de Idade -->
+        <div class="age-verification" id="age-verification">
+            <div class="dots">• • •</div>
+            
+            <div class="logo-container">
+                <svg class="logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 8 L28 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                    <path d="M50 8 L72 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                    <path d="M22 58 L50 85 L78 58" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <circle cx="50" cy="48" r="13" stroke="#c9a227" stroke-width="1.5" fill="none"></circle>
+                    <text x="50" y="53" text-anchor="middle" fill="#c9a227" font-family="Cinzel" font-size="15" font-weight="600">G</text>
+                    <line x1="50" y1="2" x2="50" y2="6" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+                    <line x1="62" y1="6" x2="66" y2="2" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+                    <line x1="38" y1="6" x2="34" y2="2" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+                </svg>
+            </div>
+
+            <p class="verification-label">VERIFICAÇÃO DE IDADE</p>
+            <h1 class="verification-question">Você tem mais de 22 anos?</h1>
+
+            <button class="btn-yes" id="btn-yes">SIM, TENHO</button>
+            <button class="btn-no" id="btn-no">NÃO</button>
+
+            <p class="privacy-note">Seus dados estão protegidos</p>
+        </div>
+
+        <!-- Quiz -->
+        <div class="quiz-container" id="quiz-container">
+            <div class="quiz-header">
+                <svg class="quiz-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 8 L28 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                    <path d="M50 8 L72 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                    <path d="M22 58 L50 85 L78 58" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <circle cx="50" cy="48" r="13" stroke="#c9a227" stroke-width="1.5" fill="none"></circle>
+                    <text x="50" y="53" text-anchor="middle" fill="#c9a227" font-family="Cinzel" font-size="15" font-weight="600">G</text>
+                </svg>
+                <p class="quiz-title">SEGREDOS DA MAÇONARIA</p>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progress-fill" style="width: 3%;"></div>
+                </div>
+                <div class="progress-text">
+                    <span class="progress-step" id="progress-step">ETAPA I / XXXII</span>
+                    <span id="progress-percent">3%</span>
+                </div>
+            </div>
+
+            <div id="question-wrapper">
+                <div class="question-section" id="question-section">
+                    <div class="question-symbol" id="question-symbol">☀️</div>
+                    <h2 class="question-text" id="question-text">Carregando...</h2>
+                </div>
+
+                <div class="options-section" id="options-container"></div>
+            </div>
+
+            <button class="back-btn" id="back-btn">◂ VOLTAR</button>
+        </div>
+
+        <!-- Página Final -->
+        <div class="final-page" id="final-page">
+            <svg class="final-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 8 L28 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                <path d="M50 8 L72 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                <path d="M22 58 L50 85 L78 58" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="50" cy="48" r="13" stroke="#c9a227" stroke-width="1.5" fill="none"></circle>
+                <text x="50" y="53" text-anchor="middle" fill="#c9a227" font-family="Cinzel" font-size="15" font-weight="600">G</text>
+                <line x1="50" y1="2" x2="50" y2="6" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+                <line x1="62" y1="6" x2="66" y2="2" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+                <line x1="38" y1="6" x2="34" y2="2" stroke="#c9a227" stroke-width="1.5" opacity="0.7"></line>
+            </svg>
+
+            <h1 class="final-title">PARABÉNS, BUSCADOR</h1>
+            <div class="divider"></div>
+            <p class="final-text">
+                Você completou a jornada iniciática e demonstrou possuir as qualidades de um verdadeiro 
+                buscador do conhecimento. Os segredos aguardam por você...
+            </p>
+
+            <a href="https://pay.kiwify.com.br/SEU-LINK" class="cta-btn" target="_blank">
+                ACESSAR OS SEGREDOS
+            </a>
+
+            <div class="trust-section">
+                <div class="trust-item">
+                    <span>🔒</span> Compra segura
+                </div>
+                <div class="trust-item">
+                    <span>⚡</span> Acesso imediato
+                </div>
+                <div class="trust-item">
+                    <span>✓</span> Garantia 7 dias
+                </div>
+            </div>
+        </div>
+
+        <!-- Página Bloqueado -->
+        <div class="blocked-page" id="blocked-page">
+            <svg class="quiz-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 20px;">
+                <path d="M50 8 L28 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                <path d="M50 8 L72 85" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+                <path d="M22 58 L50 85 L78 58" stroke="#c9a227" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle cx="50" cy="48" r="13" stroke="#c9a227" stroke-width="1.5" fill="none"></circle>
+                <text x="50" y="53" text-anchor="middle" fill="#c9a227" font-family="Cinzel" font-size="15" font-weight="600">G</text>
+            </svg>
+            <div class="divider"></div>
+            <p class="blocked-text">
+                Este conteúdo é exclusivo para maiores de 22 anos.<br><br>
+                Retorne quando atingir a idade mínima.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var quizData = [
+                { symbol: "☀️", question: "Você busca conhecimento e crescimento pessoal?", options: ["Sim, sempre", "Às vezes", "Raramente"] },
+                { symbol: "🤝", question: "O que mais te atrai na ideia de fraternidade?", options: ["Networking", "Crescimento espiritual", "Conhecimento oculto"] },
+                { symbol: "🔺", question: "Você acredita em símbolos e rituais antigos?", options: ["Completamente", "Tenho curiosidade", "Sou cético"] },
+                { symbol: "📖", question: "Qual seu nível de interesse em filosofia?", options: ["Alto", "Médio", "Baixo"] },
+                { symbol: "🏛️", question: "Você valoriza tradições centenárias?", options: ["Muito", "Moderadamente", "Prefiro o moderno"] },
+                { symbol: "⭐", question: "Como você define sucesso?", options: ["Prosperidade financeira", "Sabedoria", "Influência"] },
+                { symbol: "🤫", question: "Você é uma pessoa discreta?", options: ["Sim, muito", "Depende", "Sou aberto"] },
+                { symbol: "⚖️", question: "Qual sua relação com disciplina?", options: ["Extremamente disciplinado", "Trabalho nisso", "Prefiro flexibilidade"] },
+                { symbol: "✨", question: "Você acredita em energia e manifestação?", options: ["Sim, pratico", "Tenho interesse", "Sou cético"] },
+                { symbol: "🌙", question: "Qual sua faixa etária?", options: ["22-30", "31-45", "46+"] },
+                { symbol: "👁️", question: "Você acredita que há conhecimentos ocultos?", options: ["Sim", "Provavelmente", "Não"] },
+                { symbol: "📚", question: "Com que frequência você estuda?", options: ["Diariamente", "Semanalmente", "Raramente"] },
+                { symbol: "🗝️", question: "Você valoriza lealdade acima de tudo?", options: ["Sim", "É importante", "Depende"] },
+                { symbol: "🔱", question: "Interesse em hierarquias iniciáticas?", options: ["Muito", "Moderado", "Pouco"] },
+                { symbol: "⚖️", question: "Você se considera justo?", options: ["Sim, sempre", "Tento ser", "Depende"] },
+                { symbol: "🤝", question: "Trata todos com igualdade?", options: ["Sempre", "Maioria das vezes", "Nem sempre"] },
+                { symbol: "💎", question: "Busca perfeição pessoal?", options: ["É meu objetivo", "Trabalho nisso", "Aceito imperfeições"] },
+                { symbol: "🕯️", question: "Acredita em forças superiores?", options: ["Sim", "Tenho dúvidas", "Não"] },
+                { symbol: "🏛️", question: "Valor mais importante?", options: ["Sabedoria", "Força", "Beleza"] },
+                { symbol: "🧠", question: "Você é mais racional ou intuitivo?", options: ["Racional", "Equilibrado", "Intuitivo"] },
+                { symbol: "🎓", question: "Nível de escolaridade?", options: ["Superior completo+", "Em andamento", "Médio"] },
+                { symbol: "🎨", question: "Aprecia arte e cultura?", options: ["Muito", "Moderadamente", "Pouco"] },
+                { symbol: "☯️", question: "Entende a dualidade da vida?", options: ["Sim", "Aprendendo", "Não penso nisso"] },
+                { symbol: "🔒", question: "Mantém segredos facilmente?", options: ["Sim", "Geralmente", "Tenho dificuldade"] },
+                { symbol: "📐", question: "Valoriza organização?", options: ["Muito", "Moderadamente", "Sou espontâneo"] },
+                { symbol: "👥", question: "Gosta de trabalhar em grupo?", options: ["Sim", "Depende", "Prefiro sozinho"] },
+                { symbol: "📏", question: "Interesse em geometria sagrada?", options: ["Alto", "Médio", "Baixo"] },
+                { symbol: "🦋", question: "Está pronto para transformação?", options: ["Sim, totalmente", "Acredito que sim", "Tenho receios"] },
+                { symbol: "🌱", question: "Trabalha em autodesenvolvimento?", options: ["Diariamente", "Frequentemente", "Ocasionalmente"] },
+                { symbol: "🔨", question: "Se vê como obra em construção?", options: ["Sim", "Parcialmente", "Já sou completo"] },
+                { symbol: "🎯", question: "Maior motivação agora?", options: ["Crescimento pessoal", "Sucesso profissional", "Conexões"] },
+                { symbol: "⚜️", question: "Preparado para os mistérios?", options: ["Sim, estou pronto", "Tenho curiosidade", "Preciso saber mais"] }
+            ];
+
+            var romanNumerals = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX", "XXXI", "XXXII"];
+
+            var currentStep = 0;
+            var answers = [];
+            var isTransitioning = false;
+
+            var ageVerification = document.getElementById('age-verification');
+            var quizContainer = document.getElementById('quiz-container');
+            var finalPage = document.getElementById('final-page');
+            var blockedPage = document.getElementById('blocked-page');
+            var btnYes = document.getElementById('btn-yes');
+            var btnNo = document.getElementById('btn-no');
+            var questionSymbol = document.getElementById('question-symbol');
+            var questionText = document.getElementById('question-text');
+            var questionSection = document.getElementById('question-section');
+            var optionsContainer = document.getElementById('options-container');
+            var backBtn = document.getElementById('back-btn');
+            var progressFill = document.getElementById('progress-fill');
+            var progressStep = document.getElementById('progress-step');
+            var progressPercent = document.getElementById('progress-percent');
+            var questionWrapper = document.getElementById('question-wrapper');
+
+            function updateProgress() {
+                var percent = Math.round(((currentStep + 1) / 32) * 100);
+                progressFill.style.width = percent + '%';
+                progressStep.textContent = 'ETAPA ' + romanNumerals[currentStep] + ' / XXXII';
+                progressPercent.textContent = percent + '%';
+                
+                if (currentStep > 0) {
+                    backBtn.classList.add('visible');
+                } else {
+                    backBtn.classList.remove('visible');
+                }
+            }
+
+            function selectOption(index) {
+                if (isTransitioning) return;
+                
+                answers[currentStep] = index;
+                saveProgress();
+
+                var buttons = optionsContainer.getElementsByClassName('option-btn');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('selected');
+                }
+                buttons[index].classList.add('selected');
+
+                // Avançar automaticamente após breve delay
+                isTransitioning = true;
+                setTimeout(function() {
+                    if (currentStep < 31) {
+                        currentStep++;
+                        saveProgress();
+                        transitionToQuestion();
+                    } else {
+                        showFinal();
+                    }
+                }, 400);
+            }
+
+            function transitionToQuestion() {
+                questionWrapper.style.opacity = '0';
+                questionWrapper.style.transform = 'translateX(30px)';
+                
+                setTimeout(function() {
+                    renderQuestion();
+                    questionWrapper.style.transition = 'all 0.3s ease';
+                    questionWrapper.style.opacity = '1';
+                    questionWrapper.style.transform = 'translateX(0)';
+                    isTransitioning = false;
+                }, 200);
+            }
+
+            function renderQuestion() {
+                var data = quizData[currentStep];
+
+                questionSymbol.textContent = data.symbol;
+                questionText.textContent = data.question;
+
+                optionsContainer.innerHTML = '';
+
+                for (var i = 0; i < data.options.length; i++) {
+                    var btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.textContent = data.options[i];
+                    btn.type = 'button';
+
+                    (function(index) {
+                        btn.onclick = function() {
+                            selectOption(index);
+                        };
+                    })(i);
+
+                    optionsContainer.appendChild(btn);
+                }
+
+                updateProgress();
+            }
+
+            function goBack() {
+                if (currentStep > 0 && !isTransitioning) {
+                    isTransitioning = true;
+                    questionWrapper.style.opacity = '0';
+                    questionWrapper.style.transform = 'translateX(-30px)';
+                    
+                    setTimeout(function() {
+                        currentStep--;
+                        saveProgress();
+                        renderQuestion();
+                        
+                        // Restaurar seleção anterior
+                        if (answers[currentStep] !== undefined) {
+                            var buttons = optionsContainer.getElementsByClassName('option-btn');
+                            if (buttons[answers[currentStep]]) {
+                                buttons[answers[currentStep]].classList.add('selected');
+                            }
+                        }
+                        
+                        questionWrapper.style.transition = 'all 0.3s ease';
+                        questionWrapper.style.opacity = '1';
+                        questionWrapper.style.transform = 'translateX(0)';
+                        isTransitioning = false;
+                    }, 200);
+                }
+            }
+
+            function showFinal() {
+                quizContainer.classList.remove('active');
+                finalPage.classList.add('active');
+                localStorage.removeItem('smQuizProgress');
+            }
+
+            function saveProgress() {
+                try {
+                    localStorage.setItem('smQuizProgress', JSON.stringify({
+                        step: currentStep,
+                        answers: answers
+                    }));
+                } catch(e) {}
+            }
+
+            function loadProgress() {
+                try {
+                    var saved = localStorage.getItem('smQuizProgress');
+                    if (saved) {
+                        var data = JSON.parse(saved);
+                        currentStep = data.step || 0;
+                        answers = data.answers || [];
+                    }
+                } catch(e) {}
+            }
+
+            // Eventos
+            btnYes.onclick = function() {
+                ageVerification.style.display = 'none';
+                quizContainer.classList.add('active');
+                loadProgress();
+                renderQuestion();
+                
+                // Restaurar seleção se existir
+                if (answers[currentStep] !== undefined) {
+                    setTimeout(function() {
+                        var buttons = optionsContainer.getElementsByClassName('option-btn');
+                        if (buttons[answers[currentStep]]) {
+                            buttons[answers[currentStep]].classList.add('selected');
+                        }
+                    }, 100);
+                }
+            };
+
+            btnNo.onclick = function() {
+                ageVerification.style.display = 'none';
+                blockedPage.classList.add('active');
+            };
+
+            backBtn.onclick = function() {
+                goBack();
+            };
+
+        })();
+    </script>
+
+
+</body></html>
